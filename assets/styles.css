@@ -58,8 +58,7 @@ form{height:54px;min-height:54px}
 main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto}
 #scroll{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.85fr);grid-template-rows:clamp(190px,36vh,320px) minmax(min-content,1fr);align-content:start}
 figure{grid-column:1;max-height:none;aspect-ratio:auto}
-figure img{object-fit:cover;transform:scale(var(--zoom,1));transform-origin:var(--focus,center);filter:var(--tone,none)}
-figure[data-room="lift"] img{object-fit:contain}
+figure img{object-fit:contain;object-position:center;background:#0b0c0b}
 #notes{grid-column:2;grid-row:1;padding:10px 14px;overflow:auto}
 #rules-text{white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;user-select:text;flex:none;font-size:.9rem;line-height:1.7}
 #notes label{display:block;flex:none;margin-top:14px;font-size:.82rem}

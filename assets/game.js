@@ -3,16 +3,16 @@ let room, items, selected, drag, rulesFound;
 const endings = new Set();
 let activeItem;
 const views = {
-  b3: ['B3 계단참', 2.8, '68% 45%', 'brightness(.55)'],
-  lift: ['엘리베이터', 1, 'center', 'none'],
-  hall: ['B2 정비구역', 1, 'center', 'none'],
-  desk: ['시설관리 창구', 2.6, '100% 39%', 'none'],
-  stairs: ['비상계단', 2.3, '68% 26%', 'none'],
-  door: ['계단 끝 방화문', 3.5, '73% 0%', 'brightness(.75)'],
-  bay: ['회수 승강장', 1.8, '10% 80%', 'saturate(.55)'],
-  panel: ['회수 점검구', 4, '7% 38%', 'brightness(.82)'],
-  arrival: ['회수 호출', 2.8, '23% 55%', 'brightness(.6)'],
-  ending: ['운행 종료', 1, 'center', 'grayscale(1) brightness(.42)']
+  b3: ['B3 계단참', 'assets/images/emergency-stairs.png'],
+  lift: ['엘리베이터', 'assets/images/elevator-interior.png'],
+  hall: ['B2 정비구역', 'assets/images/b2-main.png'],
+  desk: ['시설관리 창구', 'assets/images/service-desk.png'],
+  stairs: ['B2 비상계단', 'assets/images/emergency-stairs.png'],
+  door: ['B1 방화문', 'assets/images/fire-door.png'],
+  bay: ['B1 회수 승강장', 'assets/images/recovery-platform.png'],
+  panel: ['회수 점검구', 'assets/images/recovery-panel.png'],
+  arrival: ['회수 호출', 'assets/images/recovery-platform.png'],
+  ending: ['운행 종료', 'assets/images/ending-bad.png']
 };
 const names = {
   b3: 'ACT 1 / B3 계단참',
@@ -90,14 +90,15 @@ function show(story, choices) {
   byId('choices').textContent = visible.length ? '이동 · ' + visible.join(' · ') : '';
   byId('feedback').textContent = '';
   for (const id of ['ticket', 'damaged', 'grant', 'shoes']) byId(id).hidden = !items.has(id);
-  const [caption, zoom, focus, tone] = views[room];
-  const art = byId('scene-art');
-  art.dataset.room = room;
-  art.style.setProperty('--zoom', zoom);
-  art.style.setProperty('--focus', focus);
-  art.style.setProperty('--tone', tone);
-  byId('scene-caption').textContent = caption;
+  const [caption, image] = views[room];
+  setSceneImage(image, caption);
   byId('scroll').scrollTop = 0;
+}
+function setSceneImage(source, caption) {
+  const image = byId('scene-art').querySelector('img');
+  image.src = source;
+  image.alt = caption;
+  byId('scene-caption').textContent = caption;
 }
 function enter(next, observation = '') {
   room = next;
@@ -110,7 +111,7 @@ function enter(next, observation = '') {
         (items.has('복구된 조명') ? '되돌아오니 형광등이 켜져 있었다. 불빛이 창구 옆 비상계단의 첫 계단참까지 닿는다.' : '형광등이 꺼져 있다. 비상구 너머에서 구두 소리가 난다.'), '? / 창구 / 비상계단');
       break;
     case 'desk':
-      show("창구 유리에 ‘근무자 0명’이라고 적혀 있다. 유리 너머 빈 의자가 천천히 돌아간다.\n창구 아래 조명 제어기에는 두 자리 입력창이 있다. 점검창 너머 형광등 네 개 중 두 개가 켜져 있다.", "대기실");
+      show("창구 유리에 ‘근무자 0명’이라고 적혀 있다. 유리 너머 빈 의자가 천천히 돌아간다.\n창구 아래 스위치 옆에 두 자리 입력창이 있다. 작은 점검창 너머 형광등 네 개 중 두 개가 켜져 있다.", "대기실");
       break;
     case 'stairs':
       show(observation + "B2 계단참이다. 위로 올라가면 B1, 아래로 내려가면 B3다.", "B1 / B3 / 대기실");
@@ -131,6 +132,16 @@ function end(title, story) {
   endings.add(title);
   const total = [...endings].some(found => found.startsWith('히든')) ? 5 : 4;
   show(title + '\n\n' + story + '\n\n발견한 엔딩 ' + endings.size + ' / ' + total, '?');
+  if (title === '엔딩 3 / 지상 1층') {
+    setSceneImage('assets/images/ending-return.png', '1F · 로비');
+    const note = 'B3, 구두가 신경쓰인다.';
+    byId('entries').value += (byId('entries').value ? '\n\n' : '') + note;
+    rulesFound = true;
+    byId('notes').classList.remove('unavailable');
+    byId('notes').inert = false;
+    byId('notes').setAttribute('aria-hidden', 'false');
+  }
+  if (title.startsWith('히든')) setSceneImage('assets/images/ending-companion.png', '1F · 동행');
   actions([['재시작', start]]);
 }
 function start() {
@@ -162,7 +173,7 @@ function run(raw) {
   }
   if (room === 'desk' && key === '24') {
     items.add('복구된 조명');
-    return show('스위치를 올리자 계단 쪽 형광등이 켜졌다. 동시에 구두 굽 소리가 끊겼다. 유리 너머 의자는 창구를 향한 채 멈춰 있다.', '대기실');
+    return show('제어기에 숫자를 입력하자 계단 쪽 형광등이 켜졌다. 동시에 구두 굽 소리가 끊겼다. 유리 너머 의자는 창구를 향한 채 멈춰 있다.', '대기실');
   }
   if ((room === 'desk' || room === 'stairs') && key === '대기실') return enter('hall');
   if (room === 'stairs' && key === 'b1') return enter('door');
@@ -227,7 +238,7 @@ function useTicket() {
   show('기계가 회수표를 삼켰다. 등 뒤에서 도착음이 울렸다.\n인터폰이 내 이름을 부른다. 이번에는 어머니 목소리다.\n“듣고 있으면 대답 좀 해.”', '?');
   actions([
     ['수화기 들기', answer],
-    ['안전선 뒤에 머물기', () => end('엔딩 3 / 지상 1층', '나는 안전선 뒤에서 기다렸다. 인터폰이 조용해지고 승강기 문이 열렸다. 안으로 들어가자 1층 버튼이 저절로 켜졌다. 승강기가 위로 움직였다. 표시창의 B1이 1로 바뀌고, 문 너머로 익숙한 건물 로비가 보였다.\n밖으로 나와서야 코트 주머니가 불룩하다는 걸 알았다. 기계가 삼킨 회수표가 그 안에 있었다. 뒷면에는 내 필체로 쓴 한 문장이 있었다.\n\n‘다음 사람이 오면, 규칙서를 바닥에 놓아 둘 것.’')]
+    ['안전선 뒤에 머물기', () => end('엔딩 3 / 지상 1층', '나는 안전선 뒤에서 기다렸다. 인터폰이 조용해지고 승강기 문이 열렸다. 안으로 들어가자 1층 버튼이 저절로 켜졌다. 승강기가 위로 움직였다. 표시창의 B1이 1로 바뀌고, 문 너머로 익숙한 건물 로비가 보였다.\n밖으로 나와서야 코트 주머니가 불룩하다는 걸 알았다. 기계가 삼킨 회수권이 그 안에 있었다.\n\n회수권 뒤에는 붉은 글자로 ‘규칙서는 두고 가세요.’라고 적혀 있었다.\n\n나는 규칙서에 한 줄을 남겼다.\n‘B3, 구두가 신경쓰인다.’\n\n규칙서를 바닥에 내려놓았다.')]
   ]);
 }
 names.arrival = 'ACT 2 / 회수 호출';

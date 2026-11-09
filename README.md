@@ -17,7 +17,16 @@ GitHub Pages에서는 업로드한 브랜치의 루트 디렉터리를 게시 �
 - `index.html` — 화면 구성과 게임 진입점
 - `assets/styles.css` — 화면 디자인
 - `assets/game.js` — 지문, 규칙, 퍼즐, 아이템, 엔딩
-- `assets/images/elevator-b2.png` — B2 컨셉 아트
+- `assets/images/b2-main.png` — B2 정비구역
+- `assets/images/service-desk.png` — 시설관리 창구
+- `assets/images/emergency-stairs.png` — B2·B3 비상계단
+- `assets/images/fire-door.png` — B1 방화문
+- `assets/images/recovery-panel.png` — 회수권 투입구
+- `assets/images/ending-bad.png` — 일반 배드 엔딩
+- `assets/images/ending-return.png` — 지상 1층 탈출 엔딩
+- `assets/images/ending-companion.png` — 히든 엔딩
+- `assets/images/elevator-interior.png` — 첫 장면의 엘리베이터
+- `assets/images/recovery-platform.png` — B1 회수 승강장과 회수 호출
 - `assets/images/elevator-ticket.png` — 회수권 그림
 - `.nojekyll` — 정적 파일 게시 설정
 - `.gitignore` — 운영체제 임시 파일 제외
@@ -36,6 +45,6 @@ B2에서 `규칙서`를 입력하면 오른쪽에 규칙서가 나타납니다. 
 
 B2 창구의 조명 퍼즐, B3·B2·B1을 왕복하는 계단 퍼즐, 발권 퍼즐과 아이템 사용, 일반 엔딩 4개 및 히든 엔딩 1개가 포함됩니다.
 
-장소별 이미지는 현재 B2 컨셉 아트의 확대 구도를 사용합니다. 첫 장면은 원본 전체 구도를 표시합니다. 구두는 임시 텍스트 아이콘이며, 세 종류의 권종은 같은 원화를 색상 효과와 이름으로 구분합니다.
+장소와 엔딩별 이미지를 원본 전체 구도로 표시합니다. 구두는 임시 텍스트 아이콘이며, 세 종류의 권종은 같은 원화를 색상 효과와 이름으로 구분합니다.
 
 진행 상황과 메모는 브라우저를 새로고침하면 초기화됩니다.
